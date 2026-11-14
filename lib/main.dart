@@ -1,16 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MainApp());
+import 'providers/favorite_provider.dart';
+import 'screens/main_shell.dart';
+import 'theme/app_theme.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //TODO: 1. Load workout favorit dari local storage
+  final favorites = FavoriteProvider();
+  await favorites.load();
+
+  runApp(
+    ChangeNotifierProvider.value(
+      value: favorites,
+      child: const SelecApp(),
+    ),
+  );
 }
 
-class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+class SelecApp extends StatelessWidget {
+  const SelecApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
+    return MaterialApp(
+      title: 'Selec',
+      debugShowCheckedModeBanner: false,
+      theme: buildAppTheme(),
+      home: const MainShell(),
     );
   }
 }
